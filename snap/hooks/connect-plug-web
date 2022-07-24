@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# once the slot has been plugged, restart apache
+snapctl restart afm-camp.apache

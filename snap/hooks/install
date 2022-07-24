@@ -1,0 +1,64 @@
+#!/bin/bash
+
+source ${SNAP}/config/common.conf
+source ${SNAP}/config/maria.conf
+
+# General config for all parts
+mkdir -p ${SNAP_LOG_AREA}
+mkdir -p ${SNAP_SOCKET_AREA}
+mkdir -p ${SNAP_PHP_AREA}
+mkdir -p ${SNAP_SESSION_AREA}
+mkdir -p ${SNAP_LOCK_AREA}
+mkdir -p ${SNAP_MARIA_AREA}
+mkdir -p ${SNAP_MARIA_DATA_AREA}
+
+#---------------------------------------------------------------------------------------------
+# configure Maria related items
+#---------------------------------------------------------------------------------------------
+FILE_LIST=( $MARIADB_PIDFILE $MARIADB_SOCKET $USER_PASSWORD_FILE $MARIADB_SETUP_LOCKFILE )
+
+for i in ${FILE_LIST[@]}
+do
+    TARGERT_DIR="$(dirname $i)"
+    mkdir -p $TARGERT_DIR
+    chmod 750 $TARGERT_DIR
+done
+
+# Create data dir and path to it
+mkdir -p $MARIADB_DATA_SOURCE
+chmod 750 $MARIADB_DATA_SOURCE
+
+INSTALL_LOG_FILE=$SNAP_DATA/install.stamp
+CURRENT_DATE=`date`
+echo "Installing: $CURRENT_DATE"  > $INSTALL_LOG_FILE
+
+# First run - create defaults
+$SNAP/usr/bin/mysql_install_db --defaults-file="$MARIADB_CFG_FILE" --basedir="$SNAP/usr" --datadir="$MARIADB_DATA_SOURCE" --lc-messages-dir="$SNAP/usr/share"
+
+# Create root ini file and set proper permissions on it
+# Password will be updated/added once we get to the configure
+# script and mysql is running - we need to be able to configure
+# the system before using the password as we cannot log in until
+# with the password until set
+cat <<-EOF > "$ROOT_INI_FILE"
+[client]
+socket=$MARIADB_SOCKET
+user=root
+EOF
+chmod 600 "$ROOT_INI_FILE"
+
+# Create lock file which will be used in the configure script to finish
+# configuring the database setup - this is due to the configure script
+# being called for install, refresh, and configure.
+touch $MARIADB_SETUP_LOCKFILE
+
+#---------------------------------------------------------------------------------------------
+# configure Apache2 and php related items
+#---------------------------------------------------------------------------------------------
+DIR_LIST=( $APACHE_LOG_DIR $PHP_SESSION_DIR )
+
+for i in ${DIR_LIST[@]}
+do
+    mkdir -p $i
+    chmod 777 $i
+done

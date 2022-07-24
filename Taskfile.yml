@@ -1,0 +1,36 @@
+# https://taskfile.dev
+
+version: '3'
+
+vars:
+  GREETING: Hello, World!
+
+tasks:
+  default:
+    cmds:
+      - echo "{{.GREETING}}"
+    silent: true
+
+  build:
+    cmds:
+      - snapcraft --use-lxd
+
+  debug:
+    cmds:
+      - snapcraft --use-lxd --debug
+  
+  debug-shell:
+    cmds:
+      - snap run --shell afm-camp.maria-client
+
+  clean:
+    cmds:
+      - snapcraft clean --use-lxd
+
+  install:
+    cmds:
+      - snap install afm-camp_0.1* --devmode
+
+  remove:
+    cmds:
+      - snap remove afm-camp

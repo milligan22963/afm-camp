@@ -1,0 +1,19 @@
+#!/bin/bash
+
+source ${SNAP}/config/common.conf
+
+# This will be configurable by the end user using snap set
+export APACHE_SERVER_NAME="afm-camp"
+
+export APACHE_RUN_DIR=${SNAP}/usr/bin
+export APACHE_RUN_USER=www-data
+export APACHE_RUN_GROUP=www-data
+export APACHE_LOG_DIR=${SNAP_LOG_AREA}
+export APACHE_CONFIG=${SNAP}/etc/apache2
+export APACHE_PID_FILE="${SNAP_PID_AREA}/apache2.pid"
+export APACHE_DOCUMENT_ROOT=${SNAP}/var/www/html
+export APACHE_MODULES_DIR=${SNAP}/usr/lib/apache2/modules
+export APACHE_ICONS_DIR=\"${SNAP}/usr/share/apache2/icons/\"
+export PHP_CONFIG_DIR=${SNAP}/config
+
+${SNAP}/usr/sbin/apache2 -f ${SNAP}/config/apache2.conf $params "$@"

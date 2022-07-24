@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# once the slot has been deplugged, restart apache i.e. back to initial unconnected page
+snapctl restart afm-camp.apache

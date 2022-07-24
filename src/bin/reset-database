@@ -1,0 +1,16 @@
+#!/bin/bash
+
+source ${SNAP}/config/maria.conf
+
+run_sql_command "drop database ${DATABASE_NAME};"
+run_sql_command "create database ${DATABASE_NAME};"
+
+DBEXISTS=$(run_sql_command "SHOW DATABASES LIKE '"$DATABASE_NAME"';" | grep "$DATABASE_NAME" > /dev/null; echo "$?")
+
+if [ $DBEXISTS -ne 0 ]; then
+  echo "Database not created successfully"
+  exit 1
+fi
+
+echo "Database created successfully"
+exit 0

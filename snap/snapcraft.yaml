@@ -1,0 +1,103 @@
+name: afm-camp
+base: core20
+version: '0.1'
+summary: Core20 Apache MariaDB PHP by AFM Software
+description: |
+  A simple lamp like package to provide database and web serving.
+
+architectures:
+  - build-on: amd64
+  - build-on: i386
+  - build-on: arm64
+  - build-on: armhf
+
+grade: devel # must be 'stable' to release into candidate/stable channels
+confinement: devmode # use 'strict' once you have the right plugs and slots
+contact: dwm@afmsoftware.com
+
+apps:
+  apache:
+    command: bin/start-apache2 -k start -DFOREGROUND
+    stop-command: bin/start-apache2 -l stop
+    daemon: simple
+    restart-condition: always
+    plugs:
+      - network
+      - network-bind
+      - removable-media
+  
+  maria-db:
+    command: bin/start-maria start
+    stop-command: bin/start-maria stop
+    reload-command: bin/start-maria reload
+    daemon: forking
+    restart-condition: always
+    plugs:
+      - network
+      - network-bind
+    environment:
+      LD_LIBRARY_PATH: "$SNAP/lib/x86_64-linux-gnu:$SNAP/usr/lib/x86_64-linux-gnu:$SNAP/usr/lib/x86_64-linux-gnu/mariadb19"
+
+  maria-client:
+    command: bin/start-maria client
+    plugs:
+      - network
+      - network-bind
+
+  reset-database:
+    command: bin/reset-database
+ 
+ # Users will use this interface to get access to the db
+slots:
+  database:
+    interface: content
+    content: readable
+    source:
+      read:
+        - $SNAP_DATA/sockets
+
+# This plug will be used to connect a compliant snap with a web slot, the web slot will provide the "html" directory
+plugs:
+  web:
+    interface: content
+    content: readable
+    target: $SNAP/www
+
+parts:
+  camp:
+    plugin: nil
+    stage-packages:
+      - apache2
+      - libapache2-mod-php
+      - libatm1
+      - libatm1-dev
+      - libssl1.1
+      - mariadb-server
+      - php
+      - php-common
+      - php-json
+      - php-mbstring
+      - php-mysql
+      - php-phar-io-manifest
+      - php-xml
+      - php-zip
+
+  apache-bin:
+    plugin: dump
+    source: src/
+    stage:
+      - bin/start-apache2
+      - config/apache2.conf
+      - config/common.conf
+      - config/apache-mods.conf
+      - config/php.ini
+      - www/html/index.html
+
+  maria-bin:
+    plugin: dump
+    source: src/
+    stage:
+      - bin/start-maria
+      - bin/reset-database
+      - config/maria.conf
+      - config/mariadb.ini

@@ -1,0 +1,49 @@
+#!/bin/bash
+
+OPTION=$1
+
+# source common defs
+source ${SNAP}/config/maria.conf
+
+# Default to bad news
+EXIT_CODE=1
+
+if [ "$OPTION" == "start" ]; then
+    PATH="/sbin:/usr/sbin:/bin:/usr/bin:$BIN_SOURCE/bin"
+    export PATH
+
+   "$BIN_SOURCE/mysqld_safe" --defaults-file="$MARIADB_CFG_FILE" --datadir="$MARIADB_DATA_SOURCE" --pid-file="$MARIADB_PIDFILE" --lc-messages-dir="$SNAP/share" --socket="$MARIADB_SOCKET" >/dev/null 2>&1 &
+
+    EXIT_CODE=0
+fi
+
+if [ "$OPTION" == "stop" ]; then
+    # if pid then proceed otherwise not running
+    if [ -f "$MARIADB_PIDFILE" ]; then
+        # Signal mariadb that it needs to shutdown
+        touch "$MARIADB_PIDFILE.shutdown"
+
+        mariadb_pid="$(cat "$MARIADB_PIDFILE")"
+
+        if (kill -0 "$mariadb_pid" 2>/dev/null); then
+            kill "$mariadb_pid"
+        fi
+        rm -f "$MARIADB_PIDFILE.shutdown"
+    fi
+    EXIT_CODE=0
+fi
+
+if [ "$OPTION" == "reload" ]; then
+    $BIN_SORUCE/mysql_flush_logs
+
+    EXIT_CODE=0
+fi
+
+if [ "$OPTION" == "client" ]; then
+    # remove first argument
+    shift;
+    $BIN_SOURCE/mariadb --defaults-file="$ROOT_INI_FILE" "$@"
+fi
+
+# tell them how we did
+exit $EXIT_CODE

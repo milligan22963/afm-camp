@@ -1,0 +1,39 @@
+#!/bin/bash
+
+source ${SNAP}/config/common.conf
+source ${SNAP}/config/maria.conf
+
+CONFIG_LOG=${SNAP_LOG_AREA}/config.log
+
+CURRENT_DATE=`date`
+echo "Configuration started: $CURRENT_DATE" > $CONFIG_LOG
+
+while [ ! -f $MARIADB_PIDFILE ]; do
+    sleep 1
+done
+CURRENT_DATE=`date`
+
+echo "Database running: $CURRENT_DATE" >> $CONFIG_LOG
+
+if [ -f $MARIADB_SETUP_LOCKFILE ]; then
+    # run the configure step
+    configure_mariadb
+
+    # In the perfect world, none of the above commands should fail
+    # If they do then there will be a breadcrumb left behind to 
+    # be addressed
+    if [ -f $CONFIG_ERROR_FILE ]; then
+        echo "Installation failed." >> $CONFIG_LOG
+        exit 1
+    fi
+
+    # make it so
+    echo "Setting up database" >> $CONFIG_LOG
+    ${SNAP}/bin/reset-database
+
+    rm -f $MARIADB_SETUP_LOCKFILE
+fi
+
+# Mark as configured
+CURRENT_DATE=`date`
+echo "Configured: $CURRENT_DATE" >> $CONFIG_LOG
