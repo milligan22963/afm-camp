@@ -34,3 +34,19 @@ tasks:
   remove:
     cmds:
       - snap remove afm-camp
+
+  upload-edge:
+    cmds:
+      - snapcraft upload --release=edge afm-camp_0.2*.snap
+
+  upload-beta:
+    cmds:
+      - snapcraft upload --release=beta afm-camp_0.2*.snap
+
+  upload-candidate:
+    cmds:
+      - snapcraft upload --release=candidate afm-camp_0.2*.snap
+
+  upload-stable:
+    cmds:
+      - snapcraft upload --release=stable afm-camp_0.2*.snap
