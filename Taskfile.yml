@@ -29,7 +29,7 @@ tasks:
 
   install:
     cmds:
-      - snap install afm-camp_0.1* --devmode
+      - snap install afm-camp_0.2* --devmode
 
   remove:
     cmds:
