@@ -4,7 +4,5 @@ A basic snap that incorporates apache, maria, and PHP inside of a snap.  One plu
 ## Download
 [![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-black.svg)](https://snapcraft.io/afm-camp)
 
-
-
 ## Work in progress
 I have tested the basics locally and have an example web site at afm-web.
