@@ -25,7 +25,7 @@ apps:
     plugs:
       - network
       - network-bind
-      - removable-media
+#      - removable-media
   
   maria-db:
     command: bin/start-maria start
