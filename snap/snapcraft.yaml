@@ -1,6 +1,6 @@
 name: afm-camp
 base: core20
-version: '0.2'
+version: '0.3'
 summary: Core20 Apache MariaDB PHP by AFM Software
 description: |
   A simple lamp like package to provide database and web serving.
