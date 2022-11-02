@@ -12,7 +12,7 @@ if [ "$OPTION" == "start" ]; then
     PATH="/sbin:/usr/sbin:/bin:/usr/bin:$BIN_SOURCE/bin"
     export PATH
 
-   "$BIN_SOURCE/mysqld_safe" --defaults-file="$MARIADB_CFG_FILE" --datadir="$MARIADB_DATA_SOURCE" --pid-file="$MARIADB_PIDFILE" --lc-messages-dir="$SNAP/usr/share" --socket="$MARIADB_SOCKET" >/dev/null 2>&1 &
+   "$BIN_SOURCE/mysqld_safe" --defaults-file="$MARIADB_CFG_FILE" --datadir="$MARIADB_DATA_SOURCE" --pid-file="$MARIADB_PIDFILE" --lc-messages-dir="$SNAP/usr/share/mysql" --socket="$MARIADB_SOCKET" >/dev/null 2>&1 &
 
     EXIT_CODE=0
 fi
