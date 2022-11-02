@@ -9,7 +9,8 @@ CURRENT_DATE=`date`
 echo "Configuration started: $CURRENT_DATE" > $CONFIG_LOG
 
 while [ ! -f $MARIADB_PIDFILE ]; do
-    sleep 1
+    echo "Waiting for a pid" > $CONFIG_LOG
+    sleep 10
 done
 CURRENT_DATE=`date`
 
