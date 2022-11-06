@@ -33,7 +33,7 @@ CURRENT_DATE=`date`
 echo "Installing: $CURRENT_DATE"  > $INSTALL_LOG_FILE
 
 # First run - create defaults
-$SNAP/usr/bin/mysql_install_db --initialize-insecure --defaults-file="$MARIADB_CFG_FILE" --basedir="$SNAP" --datadir="$MARIADB_DATA_SOURCE" --lc-messages-dir="$SNAP/usr/share"
+$SNAP/usr/bin/mysql_install_db --initialize-insecure --defaults-file="$MARIADB_CFG_FILE" --basedir="$SNAP/usr" --datadir="$MARIADB_DATA_SOURCE" --lc-messages-dir="$SNAP/usr/share"
 
 # Create root ini file and set proper permissions on it
 # Password will be updated/added once we get to the configure
