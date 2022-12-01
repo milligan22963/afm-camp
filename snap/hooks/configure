@@ -8,9 +8,9 @@ CONFIG_LOG=${SNAP_LOG_AREA}/config.log
 CURRENT_DATE=`date`
 echo "Configuration started: $CURRENT_DATE" > $CONFIG_LOG
 
-#while [ ! -f $MARIADB_PIDFILE ]; do
-#    sleep 10
-#done
+while [ ! -f $MARIADB_PIDFILE ]; do
+    sleep 10
+done
 CURRENT_DATE=`date`
 
 echo "Database running: $CURRENT_DATE" >> $CONFIG_LOG
