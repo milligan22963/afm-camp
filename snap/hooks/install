@@ -41,6 +41,7 @@ $SNAP/usr/bin/mysql_install_db              \
     --basedir="$SNAP/usr"                   \
     --datadir="$MARIADB_DATA_SOURCE"        \
     --verbose                               \
+    --general-log                           \
     --lc-messages-dir="$SNAP/usr/share" > $SNAP_DATA/install.txt
 
 # Create root ini file and set proper permissions on it
